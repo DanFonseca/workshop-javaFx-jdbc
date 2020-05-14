@@ -57,6 +57,7 @@ public class MainViewController implements Initializable {
             mainVbox.getChildren().add(mainMenu);
             mainVbox.getChildren().addAll(vBox.getChildren());
         } catch (IOException e) {
+            e.printStackTrace();
             gui.util.Alerts.showAlerts("Error",null,e.getMessage(), Alert.AlertType.ERROR);
         }
     }
