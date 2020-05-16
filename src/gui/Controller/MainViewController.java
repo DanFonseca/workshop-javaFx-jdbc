@@ -57,6 +57,7 @@ public class MainViewController  implements Initializable {
             Scene mainScene = Main.getMainScene();
             VBox mainVbox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
 
+
             Node mainMenu = mainVbox.getChildren().get(0);
             mainVbox.getChildren().clear();
             mainVbox.getChildren().add(mainMenu);

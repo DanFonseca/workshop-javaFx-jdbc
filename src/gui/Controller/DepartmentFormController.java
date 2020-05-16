@@ -1,8 +1,12 @@
 package gui.Controller;
 
 import Model.DAO.DAOFactory;
+import Model.DB.DBException;
 import Model.Entities.Department;
+import Model.Services.DepartmentService;
+import gui.util.Alerts;
 import gui.util.Constraints;
+import gui.util.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -15,10 +19,12 @@ import javafx.stage.Stage;
 
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class DepartmentFormController implements Initializable {
     private Department entity;
+    private DepartmentService service;
 
     @FXML
     private TextField id;
@@ -35,18 +41,40 @@ public class DepartmentFormController implements Initializable {
         this.entity = entity;
     }
 
+    public void setService(DepartmentService service) {
+        this.service = service;
+    }
+
     @FXML
-    public void onBtnSaveAction (){
-        String name = departmentName.getText();
-        DAOFactory.createDepartmentDAO().insert(new Department(1, name));
-        departmentName.clear();
-        gui.util.Alerts.showAlerts("Sucesso!", null, "Cadastro salco com sucesso", Alert.AlertType.INFORMATION);
+    public void onBtnSaveAction (ActionEvent event){
+        if(entity == null){
+            throw  new IllegalStateException("Entity was null");
+        }
+        if (service == null){
+            throw  new IllegalStateException("Service was null");
+        }
+
+        try{
+            entity = getFormData();
+            service.saveOrUpdate(entity);
+            Utils.currentStage(event).close();
+        }catch (DBException e ){
+            Alerts.showAlerts("Error save DB",null, e.getMessage(), Alert.AlertType.ERROR);
+        }
+
+    }
+
+    private Department getFormData() {
+        Department department = new Department();
+        department.setId(Utils.tryParseToInt(id.getText()));
+        department.setName(departmentName.getText());
+
+        return department;
     }
 
     @FXML
     public void onBtnClose (ActionEvent event){
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.close();
+        Utils.currentStage(event).close();
     }
 
     @Override
