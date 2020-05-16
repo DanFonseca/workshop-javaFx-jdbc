@@ -1,5 +1,4 @@
 package Model.Services;
-import java.util.ArrayList;
 import java.util.List;
 
 import Model.DAO.DAOFactory;
@@ -20,5 +19,9 @@ public class DepartmentService {
         }else {
             dao.update(department);
         }
+    }
+
+    public void remove (Department department){
+        dao.deleteById(department.getId());
     }
 }

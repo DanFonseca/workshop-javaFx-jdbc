@@ -1,6 +1,5 @@
 package Model.DAO.Impl;
 
-import Model.DB.*;
 import Model.DAO.DepartmentDAO;
 import Model.DB.DB;
 import Model.DB.DBException;

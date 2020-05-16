@@ -4,7 +4,6 @@ import Model.DB.*;
 import Model.DAO.SellerDAO;
 import Model.Entities.Department;
 import Model.Entities.Seller;
-import org.w3c.dom.ls.LSOutput;
 
 
 import java.sql.*;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingDeque;
 
 
 public class SellerDAOJDBC implements SellerDAO {

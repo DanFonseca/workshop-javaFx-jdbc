@@ -1,6 +1,5 @@
 package gui.Controller;
 
-import Model.DAO.DAOFactory;
 import Model.DB.DBException;
 import Model.Entities.Department;
 import Model.Services.DepartmentService;
@@ -12,16 +11,13 @@ import gui.util.Utils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 
 import java.net.URL;
-import java.sql.SQLException;
 import java.util.*;
 
 public class DepartmentFormController implements Initializable {
