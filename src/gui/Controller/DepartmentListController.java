@@ -2,6 +2,7 @@ package gui.Controller;
 
 import Model.Entities.Department;
 import Model.Services.DepartmentService;
+import gui.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
 import javafx.collections.FXCollections;
@@ -28,7 +29,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 
-public class DepartmentListController implements Initializable {
+public class DepartmentListController implements Initializable, DataChangeListener {
 
     private DepartmentService service;
 
@@ -105,6 +106,7 @@ public class DepartmentListController implements Initializable {
             controller.setDepartment(department);
             controller.updateFormData();
             controller.setService(new DepartmentService());
+            controller.subscribeListener(this);
 
             Stage dialogueStage = new Stage();
             dialogueStage.setTitle("Enter Department Data");
@@ -117,5 +119,10 @@ public class DepartmentListController implements Initializable {
         }catch (IOException e){
             Alerts.showAlerts("Io Exception", "Error loading form view", e.getMessage(), Alert.AlertType.ERROR );
         }
+    }
+
+    @Override
+    public void onDataChanged() {
+        updateDepartmentList();
     }
 }

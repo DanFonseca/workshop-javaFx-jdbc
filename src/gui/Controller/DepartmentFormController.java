@@ -4,6 +4,7 @@ import Model.DAO.DAOFactory;
 import Model.DB.DBException;
 import Model.Entities.Department;
 import Model.Services.DepartmentService;
+import gui.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -20,11 +21,14 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class DepartmentFormController implements Initializable {
     private Department entity;
     private DepartmentService service;
+    private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
     @FXML
     private TextField id;
@@ -58,10 +62,21 @@ public class DepartmentFormController implements Initializable {
             entity = getFormData();
             service.saveOrUpdate(entity);
             Utils.currentStage(event).close();
+            changeListener();
         }catch (DBException e ){
             Alerts.showAlerts("Error save DB",null, e.getMessage(), Alert.AlertType.ERROR);
         }
 
+    }
+
+    private void changeListener() {
+        for(DataChangeListener listener : dataChangeListeners){
+            listener.onDataChanged();
+        }
+    }
+
+    public void subscribeListener (DataChangeListener dataChangeListener){
+        dataChangeListeners.add(dataChangeListener);
     }
 
     private Department getFormData() {
