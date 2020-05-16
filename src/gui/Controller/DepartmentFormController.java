@@ -4,6 +4,7 @@ import Model.DAO.DAOFactory;
 import Model.DB.DBException;
 import Model.Entities.Department;
 import Model.Services.DepartmentService;
+import Model.excpetions.ValidationsException;
 import gui.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
@@ -21,9 +22,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DepartmentFormController implements Initializable {
     private Department entity;
@@ -63,7 +62,10 @@ public class DepartmentFormController implements Initializable {
             service.saveOrUpdate(entity);
             Utils.currentStage(event).close();
             changeListener();
-        }catch (DBException e ){
+        }catch (ValidationsException e){
+            setErrorMessages(e.getErros());
+        }
+        catch (DBException e ){
             Alerts.showAlerts("Error save DB",null, e.getMessage(), Alert.AlertType.ERROR);
         }
 
@@ -80,9 +82,19 @@ public class DepartmentFormController implements Initializable {
     }
 
     private Department getFormData() {
+        ValidationsException validationsException = new ValidationsException("Validation Error");
+
         Department department = new Department();
         department.setId(Utils.tryParseToInt(id.getText()));
+        String name = departmentName.getText();
+        if(name == null || name.trim().equals("")){
+            validationsException.addError("name", "Field cant be empty");
+        }
         department.setName(departmentName.getText());
+
+        if(validationsException.getErros().size() > 0){
+            throw validationsException;
+        }
 
         return department;
     }
@@ -104,5 +116,12 @@ public class DepartmentFormController implements Initializable {
         }
         departmentName.setText(entity.getName());
         id.setText(String.valueOf(entity.getId()));
+    }
+
+    private void setErrorMessages (Map<String, String> errors){
+        Set<String> fields  = errors.keySet();
+        if(fields.contains("name")){
+            error.setText(errors.get("name"));
+        }
     }
 }

@@ -39,7 +39,7 @@
             <Label text="Department" GridPane.rowIndex="1" />
             <TextField fx:id="id" editable="false" GridPane.columnIndex="1" />
             <TextField fx:id="departmentName" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Label textFill="#e70505" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label fx:id="error" textFill="#e70505" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="25.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
                   <Button mnemonicParsing="false" onAction="#onBtnSaveAction" text="Save" />
