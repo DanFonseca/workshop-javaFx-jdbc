@@ -1,5 +1,6 @@
-package gui;
+package gui.Controller;
 
+import Model.Services.DepartmentService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -14,8 +15,9 @@ import sample.Main;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
-public class MainViewController implements Initializable {
+public class MainViewController  implements Initializable {
     @FXML
     private MenuItem menuItemSeller;
     @FXML
@@ -31,12 +33,15 @@ public class MainViewController implements Initializable {
 
     @FXML
     public void onMenuItemDepartmentAction (){
-        loadView("/gui/DepartmentListView.fxml");
+        loadView("/gui/Views/DepartmentListView.fxml",(DepartmentListController controller)->{
+            controller.setDepartmentService(new DepartmentService());
+            controller.updateDepartmentList();
+        } );
     }
 
     @FXML
     public void onMenuItemAboutAction (){
-        loadView("/gui/AboutView.fxml");
+        loadView("/gui/Views/AboutView.fxml", x->{});
     }
 
     @Override
@@ -44,7 +49,7 @@ public class MainViewController implements Initializable {
 
     }
 
-    private synchronized void  loadView (String absoluteName){
+    private synchronized <T> void  loadView (String absoluteName, Consumer<T> consumer){
         FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
         try {
             VBox vBox = loader.load();
@@ -56,6 +61,9 @@ public class MainViewController implements Initializable {
             mainVbox.getChildren().clear();
             mainVbox.getChildren().add(mainMenu);
             mainVbox.getChildren().addAll(vBox.getChildren());
+            T controller = loader.getController();
+            consumer.accept(controller);
+
         } catch (IOException e) {
             e.printStackTrace();
             gui.util.Alerts.showAlerts("Error",null,e.getMessage(), Alert.AlertType.ERROR);
