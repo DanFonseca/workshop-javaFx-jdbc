@@ -59,6 +59,10 @@ public class DepartmentDAOJDBC implements DepartmentDAO {
                     "where " +
                     "d.Id = ?");
 
+            st.setString(1, department.getName());
+            st.setInt(2, department.getId());
+
+
             int rowsAffected = st.executeUpdate();
 
             if(rowsAffected > 0){

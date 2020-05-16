@@ -5,6 +5,7 @@ import Model.Services.DepartmentService;
 import gui.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Utils;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,16 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Main;
-
 
 import java.io.IOException;
 import java.net.URL;
@@ -46,6 +43,8 @@ public class DepartmentListController implements Initializable, DataChangeListen
     @FXML
     private Button newButton;
 
+    @FXML
+    private TableColumn<Department, Department> tableColumnEDIT;
 
     private ObservableList<Department> departmentObservableList;
 
@@ -92,6 +91,7 @@ public class DepartmentListController implements Initializable, DataChangeListen
         if (service == null) {
             throw new IllegalMonitorStateException("DepartmentList variable is null");
         }
+        initEditButtons();
         List<Department> findAll = service.findAll();
         departmentObservableList = FXCollections.observableList(findAll);
         departmentTableView.setItems(departmentObservableList);
@@ -119,6 +119,25 @@ public class DepartmentListController implements Initializable, DataChangeListen
         }catch (IOException e){
             Alerts.showAlerts("Io Exception", "Error loading form view", e.getMessage(), Alert.AlertType.ERROR );
         }
+    }
+
+    private void initEditButtons() {
+        tableColumnEDIT.setCellValueFactory(param -> new ReadOnlyObjectWrapper<>(param.getValue()));
+        tableColumnEDIT.setCellFactory(param -> new TableCell<Department, Department>() {
+            private final Button button = new Button("edit");
+            @Override
+            protected void updateItem(Department obj, boolean empty) {
+                super.updateItem(obj, empty);
+                if (obj == null) {
+                    setGraphic(null);
+                    return;
+                }
+                setGraphic(button);
+                button.setOnAction(
+                        event -> createDialogForm(
+                                                        obj, Utils.currentStage(event), "/gui/Controller/DepartmentForm.fxml"));
+            }
+        });
     }
 
     @Override
