@@ -18,7 +18,7 @@
       </Label>
       <ToolBar prefHeight="40.0" prefWidth="200.0">
          <items>
-            <Button mnemonicParsing="false" onAction="#onNewButtonAction" text="New" />
+            <Button fx:id="newButton" mnemonicParsing="false" onAction="#onNewButtonAction" text="New" />
          </items></ToolBar>
       <TableView fx:id="SellerTableView" prefHeight="200.0" prefWidth="200.0">
         <columns>

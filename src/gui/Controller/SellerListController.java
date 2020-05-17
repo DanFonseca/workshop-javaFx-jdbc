@@ -2,6 +2,7 @@ package gui.Controller;
 
 import Model.DB.DBException;
 import Model.Entities.Seller;
+import Model.Services.DepartmentService;
 import Model.Services.SellerService;
 import gui.DataChangeListener;
 import gui.util.Alerts;
@@ -11,12 +12,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.Main;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
@@ -71,7 +77,8 @@ public class SellerListController implements Initializable, DataChangeListener {
     public void onNewButtonAction(ActionEvent event) {
         Stage currentStage = Utils.currentStage(event);
         Seller seller = new Seller();
-        createDialogForm(seller, currentStage, "/gui/Controller/SellerForm.fxml");
+
+        createDialogForm(seller, currentStage, "/gui/Controller/SellerFormView.fxml");
     }
 
 
@@ -110,12 +117,13 @@ public class SellerListController implements Initializable, DataChangeListener {
     }
 
     private void createDialogForm(Seller seller, Stage parentStage, String absoluteName) {
-       /* try {
+        try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
             Pane pane = loader.load();
 
             SellerFormController controller = loader.getController();
-            controller.setSeller(seller);
+            controller.setServices(seller, new DepartmentService());
+            controller.loadAssociatedObjects();
             controller.updateFormData();
             controller.setService(new SellerService());
             controller.subscribeListener(this);
@@ -129,8 +137,9 @@ public class SellerListController implements Initializable, DataChangeListener {
             dialogueStage.showAndWait();
 
         } catch (IOException e) {
+          e.printStackTrace();
             Alerts.showAlerts("Io Exception", "Error loading form view", e.getMessage(), Alert.AlertType.ERROR);
-      }*/
+      }
     }
 
     private void initEditButtons() {
@@ -148,7 +157,7 @@ public class SellerListController implements Initializable, DataChangeListener {
                 setGraphic(button);
                 button.setOnAction(
                         event -> createDialogForm(
-                                obj, Utils.currentStage(event), "/gui/Controller/SellerForm.fxml"));
+                                obj, Utils.currentStage(event), "/gui/Controller/SellerFormView.fxml"));
             }
         });
     }
