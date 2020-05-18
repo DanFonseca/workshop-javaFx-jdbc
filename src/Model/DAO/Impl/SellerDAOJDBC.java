@@ -218,7 +218,7 @@ public class SellerDAOJDBC implements SellerDAO {
             rs = st.executeQuery("select s.*, d.Name as dpName " +
                             "from seller as s " +
                             "inner join department as d " +
-                            "on d.Id = s.Id");
+                            "on d.Id = s.DepartmentId");
 
             while (rs.next()) {
                 //ver se o departamente existe no map
